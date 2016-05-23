@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="2.8" jmeter="2.13 r1665067">
+  <hashTree>
+    <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="CameraOverAnAreaWithBuildingsAndTheBuildingsAreAlreadyServed" enabled="true">
+      <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables pré-définies" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="planes" elementType="HTTPArgument">
+            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+            <stringProp name="Argument.value">{&quot;planes&quot;:[{&quot;x&quot;:0.9977137580583337,&quot;y&quot;:0.015756166583592503,&quot;z&quot;:-0.06571910069070165,&quot;w&quot;:2483925.733283863},{&quot;x&quot;:-0.5572405770284743,&quot;y&quot;:0.2520286044113952,&quot;z&quot;:-0.7911791970668246,&quot;w&quot;:-803686.2666709884},{&quot;x&quot;:0.12784484499316584,&quot;y&quot;:0.9906025894087513,&quot;z&quot;:0.048602525296910816,&quot;w&quot;:-5145776.177293365},{&quot;x&quot;:0.11876119434721139,&quot;y&quot;:-0.8406789510385902,&quot;z&quot;:-0.5283509061199438,&quot;w&quot;:6086485.435636114},{&quot;x&quot;:0.44047318097427807,&quot;y&quot;:0.26778477108993176,&quot;z&quot;:-0.856898298058009,&quot;w&quot;:1680238.4666889089},{&quot;x&quot;:-0.44047318097427807,&quot;y&quot;:-0.26778477108993176,&quot;z&quot;:0.856898298058009,&quot;w&quot;:2998319760.533307}]}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+            <stringProp name="Argument.name">planes</stringProp>
+          </elementProp>
+          <elementProp name="lastServedRegions" elementType="HTTPArgument">
+            <boolProp name="HTTPArgument.always_encode">true</boolProp>
+            <stringProp name="Argument.value">[&quot;56de9fde23b4dbe0199fa2ce&quot;,&quot;56de9fde23b4dbe0199fa2e3&quot;,&quot;56de9fde23b4dbe0199fa2e4&quot;,&quot;56de9fde23b4dbe0199fa2f8&quot;,&quot;56de9fde23b4dbe0199fa2f9&quot;,&quot;56de9fde23b4dbe0199fa2fa&quot;,&quot;56de9fde23b4dbe0199fa30d&quot;,&quot;56de9fde23b4dbe0199fa30e&quot;,&quot;56de9fde23b4dbe0199fa30f&quot;,&quot;56de9fde23b4dbe0199fa310&quot;,&quot;56de9fde23b4dbe0199fa322&quot;,&quot;56de9fde23b4dbe0199fa323&quot;,&quot;56de9fde23b4dbe0199fa324&quot;,&quot;56de9fde23b4dbe0199fa325&quot;,&quot;56de9fde23b4dbe0199fa326&quot;,&quot;56de9fde23b4dbe0199fa337&quot;,&quot;56de9fde23b4dbe0199fa338&quot;,&quot;56de9fde23b4dbe0199fa339&quot;,&quot;56de9fde23b4dbe0199fa33a&quot;,&quot;56de9fde23b4dbe0199fa33b&quot;,&quot;56de9fde23b4dbe0199fa34c&quot;,&quot;56de9fde23b4dbe0199fa34d&quot;,&quot;56de9fde23b4dbe0199fa34e&quot;,&quot;56de9fde23b4dbe0199fa34f&quot;,&quot;56de9fde23b4dbe0199fa350&quot;,&quot;56de9fde23b4dbe0199fa351&quot;,&quot;56de9fde23b4dbe0199fa361&quot;,&quot;56de9fde23b4dbe0199fa362&quot;,&quot;56de9fde23b4dbe0199fa363&quot;,&quot;56de9fde23b4dbe0199fa364&quot;,&quot;56de9fde23b4dbe0199fa365&quot;,&quot;56de9fde23b4dbe0199fa366&quot;,&quot;56de9fde23b4dbe0199fa376&quot;,&quot;56de9fde23b4dbe0199fa377&quot;,&quot;56de9fde23b4dbe0199fa378&quot;,&quot;56de9fde23b4dbe0199fa379&quot;,&quot;56de9fde23b4dbe0199fa37a&quot;,&quot;56de9fde23b4dbe0199fa37b&quot;,&quot;56de9fde23b4dbe0199fa37c&quot;,&quot;56de9fde23b4dbe0199fa38c&quot;,&quot;56de9fde23b4dbe0199fa38d&quot;,&quot;56de9fde23b4dbe0199fa38e&quot;,&quot;56de9fde23b4dbe0199fa38f&quot;,&quot;56de9fde23b4dbe0199fa390&quot;,&quot;56de9fde23b4dbe0199fa391&quot;]</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+            <boolProp name="HTTPArgument.use_equals">true</boolProp>
+            <stringProp name="Argument.name">lastServedRegions</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+      <stringProp name="HTTPSampler.domain">localhost</stringProp>
+      <stringProp name="HTTPSampler.port">3000</stringProp>
+      <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+      <stringProp name="HTTPSampler.response_timeout"></stringProp>
+      <stringProp name="HTTPSampler.protocol"></stringProp>
+      <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+      <stringProp name="HTTPSampler.path">2dtilesbuildings</stringProp>
+      <stringProp name="HTTPSampler.method">GET</stringProp>
+      <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+      <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+      <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+      <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+      <boolProp name="HTTPSampler.monitor">false</boolProp>
+      <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+    </HTTPSamplerProxy>
+    <hashTree/>
+  </hashTree>
+</jmeterTestPlan>

@@ -1,0 +1,9 @@
+!table
+!version 300
+!charset WindowsLatin1
+
+Definition Table
+  Type NATIVE Charset "Neutral"
+  Fields 2
+    Polygon_ID Char (64) ;
+    Polygon_Type Char (254) ;

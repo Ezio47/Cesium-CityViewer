@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Use correct character set. -->
+  <meta charset="utf-8">
+  <!-- Tell IE to use the latest, best version. -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>Cesium 3D Viewer!</title>
+  <script src="../node_modules/cesium/Build/Cesium/Cesium.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"> </script>
+  <style>
+    @import url(../node_modules/cesium/Build/Cesium/Widgets/widgets.css);
+    html, body, #cesiumContainer {
+      width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<script>
+
+  var viewer = new Cesium.Viewer('cesiumContainer');
+  var frustum = new Cesium.PerspectiveFrustum();
+  frustum.aspectRatio = 1.98;
+  frustum.fov = Cesium.Math.PI_OVER_TWO;
+  frustum.far = 4000 ;
+
+  viewer.scene.camera.position = new Cesium.Cartesian3(-2417176.9074030295, 5387657.341091297, 2408832.496700542);
+  viewer.scene.camera.direction =  new Cesium.Cartesian3 (-0.0002736038104914327 , 0.0006098368611871486, -0.9999997766199528);
+  viewer.scene.camera.up = new Cesium.Cartesian3 (-0.13098187000997633, 0.9913845568650007, 0.0006404201281850658);
+  //viewer.scene.camera.frustum.far = 20000 ;
+
+
+  var buildingsColor = [Cesium.Color.DARKGRAY, Cesium.Color.DARKGREY, Cesium.Color.GAINSBORO, Cesium.Color.HONEYDEW, Cesium.Color.LIGHTGRAY, Cesium.Color.LIGHTSLATEGRAY, Cesium.Color.LIGHTSLATEGREY, Cesium.Color.SILVER ];
+
+  var lastServedRegions = [];
+  //console.log(JSON.stringify(lastServedRegions));
+
+
+  viewer.camera.moveEnd.addEventListener(function (){
+    var cameraPosition = viewer.scene.camera.position ;
+    var cameraDirection = viewer.scene.camera.direction ;
+    var cameraUp = viewer.scene.camera.up ;
+    var cullingVolume =  frustum.computeCullingVolume(cameraPosition, cameraDirection, cameraUp);
+
+     $.ajax({
+       type: "GET",
+       url: "/newregions",
+       cache : true ,
+       data: {cameraPosition: JSON.stringify(cameraPosition) , planes: JSON.stringify(cullingVolume) , lastServedRegions: JSON.stringify(lastServedRegions)}
+       , success: function (response) {
+         //console.log(JSON.stringify(response));
+          //nested http request
+
+
+          //update the regions mapping array
+          lastServedRegions = response.lastServedRegions ;
+
+
+          $.ajax({ type: "GET",
+           url: "/tiledbuildings",
+           cache : true ,
+           data: {newregions: JSON.stringify(response.newregions)}
+           , success: function (response) {
+
+
+              //console.log('buildings received');
+
+
+
+
+              //console.log('done deleting building sthat should no longer exist in the scene ');
+
+              //console.log('resposne '  + JSON.stringify(response ));
+              var i = 0 ;
+              response.forEach(function (building)
+              {
+                //console.log('building is being added to scene '+building.id);
+                var geometryInstance = new Cesium.GeometryInstance({
+                    geometry : building.geometry,
+                    attributes: {
+                      color: Cesium.ColorGeometryInstanceAttribute.fromColor(buildingsColor[i])
+                    },
+
+                    id : building.id
+                      });
+                i++;
+                if (i==8) i = 0 ;
+
+                viewer.scene.primitives.add(new Cesium.Primitive({
+                      releaseGeometryInstances : false ,
+                      geometryInstances : geometryInstance,
+                      appearance : new Cesium.PerInstanceColorAppearance({
+                          closed : true,
+                          translucent : false
+                      })
+                    }));
+                })
+
+               for(var i =0  ; i< viewer.scene.primitives.length ; i++)
+              {
+                
+                var ids = viewer.scene.primitives.get(i).geometryInstances.id.split("#");
+                //console.log('ids '+ids);
+                var index = lastServedRegions.map(function(object) { return object['id']; }).indexOf(ids[0]);
+                if(index == -1)
+                {
+                    viewer.scene.primitives.remove(viewer.scene.primitives.get(i));
+                    i-- ;
+                }
+                else
+                {
+                  console.log('lod ');
+                  if ( parseInt(ids[1]) > lastServedRegions[index].newLod )
+                  {
+                    viewer.scene.primitives.remove(viewer.scene.primitives.get(i));
+                    i-- ;
+                  }
+
+                }
+              }
+
+
+            }
+
+            });
+
+
+       }
+     })
+
+ });
+
+
+ /* scene.camera.position = new Cesium.Cartesian3(-2417176.9074030295, 5387657.341091297, 2408832.496700542);
+
+  scene.camera.direction =  new Cesium.Cartesian3 (-0.0002736038104914327 , 0.0006098368611871486, -0.9999997766199528);
+
+  scene.camera.up = new Cesium.Cartesian3 (-0.13098187000997633, 0.9913845568650007, 0.0006404201281850658);*/
+
+  // 1. Draw a translucent ellipse on the surface with a checkerboard pattern
+
+
+  /*viewer.camera.moveEnd.addEventListener(function () {
+
+
+    //create a frustum
+    var frustum = new Cesium.PerspectiveFrustum();
+    frustum.aspectRatio = 1.98;
+    frustum.fov = Cesium.Math.PI_OVER_THREE;
+    frustum.far = 10000 ;
+
+    var cameraPosition = viewer.scene.camera.position ;
+    var cameraDirection = viewer.scene.camera.direction;
+    var cameraUp = viewer.scene.camera.up;
+
+
+    console.log(cameraPosition);
+
+    var cullingVolume =  frustum.computeCullingVolume(cameraPosition, cameraDirection, cameraUp);
+
+    console.log(JSON.stringify(cullingVolume));
+
+    $.ajax({
+        method: "GET",
+        url: "/newregions",
+        cache : true
+        ,
+          data: {cameraPosition : JSON.stringify(cameraPosition) , planes: JSON.stringify(cullingVolume)  , lastServedRegions : JSON.stringify(lastServedRegions) }
+        }
+      )
+        .done(function( response ) {
+          console.log('here');
+          var regionsToRetrieve = response["newregions"] ;
+          lastServedRegions = response["lastServedRegions"];
+          if(lastServedRegions === undefined ) lastServedRegions = [];
+
+          //remove all the buildings that should no longer exist in the scene in order to free client memory
+          for(var i = 0  ; i< viewer.scene.primitives.length ; i++)
+          {
+
+            var index = lastServedRegions.indexOf(viewer.scene.primitives.get(i).geometryInstances.id);
+            if(index == -1)
+            {
+              viewer.scene.primitives.remove(viewer.scene.primitives.get(i));
+              i-- ;
+            }
+
+          }
+
+          // look for the new visible regions in server
+          if(regionsToRetrieve.length > 0)
+          {
+            $.ajax({
+                method: "GET",
+                url: "/tiledbuildings"
+                ,
+                data:  {newregions : regionsToRetrieve , newLods : newLods}
+              }
+              )
+              .done(function( response ) {
+                  console.log(response);
+                  var buildings = response["buildings"] ;
+                  for(var i = 0 ; i < buildings.length ; i++ )
+                  {
+                    var geometryInstance = new Cesium.GeometryInstance({
+                      geometry : buildings[i].geometry,
+                      attributes: {
+                        color: Cesium.ColorGeometryInstanceAttribute.fromColor(buildings[i].color)
+                      },
+                      id : buildings[i].id
+                    });
+
+
+                    var primitive = new Cesium.Primitive({
+                      releaseGeometryInstances : false ,
+                      geometryInstances : geometryInstance,
+                      appearance : new Cesium.PerInstanceColorAppearance({
+                        closed : true,
+                        translucent : false
+                      })
+                    });
+
+                    viewer.scene.primitives.add(primitive);
+
+                  }
+
+
+              }
+              );
+
+
+          }
+
+         });
+
+    });*/
+
+
+</script>
+</body>
+</html>
